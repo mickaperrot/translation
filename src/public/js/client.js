@@ -190,6 +190,7 @@ socket.on('speechData', function (data) {
 socket.on('tts', function (tts) {
 	console.log(tts);
 	console.log(`Received ${tts.byteLength} bytes`);
+	playOutput(tts);
 });
 
 
@@ -318,4 +319,27 @@ function capitalize(s) {
 		return s;
 	}
 	return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function playOutput(arrayBuffer){
+	let audioContext = new AudioContext();
+	let outputSource;
+	try {
+		if(arrayBuffer.byteLength > 0){
+			console.log(arrayBuffer.byteLength);
+			audioContext.decodeAudioData(arrayBuffer,
+			function(buffer){
+				audioContext.resume();
+				outputSource = audioContext.createBufferSource();
+				outputSource.connect(audioContext.destination);
+				outputSource.buffer = buffer;
+				outputSource.start(0);
+			},
+			function(){
+				console.log(arguments);
+			});
+		}
+	} catch(e) {
+		console.log(e);
+	}
 }
