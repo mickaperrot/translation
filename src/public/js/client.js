@@ -187,6 +187,11 @@ socket.on('speechData', function (data) {
     }
 });
 
+socket.on('tts', function (tts) {
+	console.log(tts);
+	console.log(`Received ${tts.byteLength} bytes`);
+});
+
 
 //================= Juggling Spans for nlp Coloring =================
 function addTimeSettingsInterim(speechData) {

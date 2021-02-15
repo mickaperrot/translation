@@ -12,7 +12,9 @@ const environmentVars = require('dotenv').config();
 const speech = require('@google-cloud/speech');
 const speechClient = new speech.SpeechClient(); // Creates a client
 const translation = require('@google-cloud/media-translation');
-const translationClient = new translation.SpeechTranslationServiceClient();;
+const translationClient = new translation.SpeechTranslationServiceClient();
+const textToSpeech = require('@google-cloud/text-to-speech');
+const TextToSpeechClient = new textToSpeech.TextToSpeechClient();
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -81,13 +83,12 @@ io.on('connection', function (client) {
       .on('error', console.error)
       .on('data', (data) => {
           const {result, speechEventType} = data;
-          console.log('--- Received from GCP');
-          console.log('Event: ' + speechEventType);
-          console.log('Transcript: ' + result.textTranslationResult.translation);
-          console.log('---');
           if (speechEventType === 'END_OF_SINGLE_UTTERANCE') {
               process.stdout.write(`Final translation: ${currentTranslation}\n`);
               client.emit('speechData', data);
+              getSpeech(currentTranslation).then( speech => {
+                client.emit('tts', speech);
+              });
               recognizeStream.destroy();
               //stopRecognitionStream();
               startRecognitionStream(client);
@@ -104,6 +105,22 @@ io.on('connection', function (client) {
       recognizeStream.end();
     }
     recognizeStream = null;
+  }
+
+  async function getSpeech(translation){
+    console.log(`Getting speech for: ${translation}`);
+    // Construct the request
+    const request = {
+      input: {text: translation},
+      // Select the language and SSML voice gender (optional)
+      voice: {languageCode: 'en-US', ssmlGender: 'NEUTRAL'},
+      // select the type of audio encoding
+      audioConfig: {audioEncoding: 'LINEAR16'},
+    };
+  
+    // Performs the text-to-speech request
+    const [response] = await TextToSpeechClient.synthesizeSpeech(request);
+    return response.audioContent;
   }
 });
 
