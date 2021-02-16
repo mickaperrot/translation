@@ -6,7 +6,7 @@
 //	Contact: vinzenz@sansho.studio
 
 const express = require('express');
-const environmentVars = require('dotenv').config();
+//const environmentVars = require('dotenv').config();
 
 // Google Cloud
 const speech = require('@google-cloud/speech');
