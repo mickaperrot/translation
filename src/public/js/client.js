@@ -196,7 +196,7 @@ socket.on('tts', function (tts) {
 
 //================= Juggling Spans for nlp Coloring =================
 function addTimeSettingsInterim(speechData) {
-    let wholeString = speechData.result.textTranslationResult.translation;
+	let wholeString = speechData.result.textTranslationResult.translation;
 
 	let nlpObject = nlp(wholeString).out('terms');
 
@@ -210,7 +210,7 @@ function addTimeSettingsInterim(speechData) {
 		//generate span
 		let newSpan = document.createElement('span');
 		newSpan.innerHTML = word;
-
+/*
 		//push all tags
 		for (let j = 0; j < nlpObject[i].tags.length; j++) {
 			tags.push(nlpObject[i].tags[j]);
@@ -223,7 +223,7 @@ function addTimeSettingsInterim(speechData) {
 			let className = `nl-${cleanClassName}`;
 			newSpan.classList.add(className);
 		}
-
+*/
 		words_without_time.push(newSpan);
 	}
 
