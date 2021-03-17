@@ -113,7 +113,7 @@ io.on('connection', function (client) {
     const request = {
       input: {text: translation},
       // Select the language and SSML voice gender (optional)
-      voice: {languageCode: 'en-US', ssmlGender: 'NEUTRAL'},
+      voice: {languageCode: 'fr-FR', ssmlGender: 'MALE'},
       // select the type of audio encoding
       audioConfig: {audioEncoding: 'LINEAR16'},
     };
@@ -132,8 +132,8 @@ io.on('connection', function (client) {
 const encoding = 'linear16';
 //const sampleRateHertz = 16000;
 //const languageCode = 'en-US'; //en-US
-const sourceLanguage ='fr-FR';
-const targetLanguage = 'en-US';
+const sourceLanguage ='en-US';
+const targetLanguage = 'fr-FR';
 
 const config = {
     audioConfig: {
