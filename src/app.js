@@ -1,16 +1,8 @@
 'use strict';
 
-//  Google Cloud Speech Playground with node.js and socket.io
-//  Created by Vinzenz Aubry for sansho 24.01.17
-//  Feel free to improve!
-//	Contact: vinzenz@sansho.studio
-
 const express = require('express');
-//const environmentVars = require('dotenv').config();
 
 // Google Cloud
-const speech = require('@google-cloud/speech');
-const speechClient = new speech.SpeechClient(); // Creates a client
 const translation = require('@google-cloud/media-translation');
 const translationClient = new translation.SpeechTranslationServiceClient();
 const textToSpeech = require('@google-cloud/text-to-speech');
@@ -90,7 +82,6 @@ io.on('connection', function (client) {
                 client.emit('tts', speech);
               });
               recognizeStream.destroy();
-              //stopRecognitionStream();
               startRecognitionStream(client);
           } else {
               currentTranslation = result.textTranslationResult.translation;
@@ -109,7 +100,6 @@ io.on('connection', function (client) {
 
   async function getSpeech(translation){
     console.log(`Getting speech for: ${translation}`);
-    // Construct the request
     const request = {
       input: {text: translation},
       // Select the language and SSML voice gender (optional)

@@ -1,10 +1,5 @@
 'use strict'
 
-//  Google Cloud Speech Playground with node.js and socket.io
-//  Created by Vinzenz Aubry for sansho 24.01.17
-//  Feel free to improve!
-//	Contact: vinzenz@sansho.studio
-
 //connection to socket
 const socket = io.connect();
 
@@ -64,7 +59,6 @@ function initRecording() {
 
 function microphoneProcess(e) {
 	var left = e.inputBuffer.getChannelData(0);
-	// var left16 = convertFloat32ToInt16(left); // old 32 to 16 function
     var left16 = downsampleBuffer(left, 44100, 16000)
 	socket.emit('binaryData', left16);
 }
@@ -111,19 +105,6 @@ function stopRecording() {
 		AudioContext = null;
 		startButton.disabled = false;
 	});
-
-	// context.close();
-
-
-	// audiovideostream.stop();
-
-	// microphone_stream.disconnect(script_processor_node);
-	// script_processor_node.disconnect(audioContext.destination);
-	// microphone_stream = null;
-	// script_processor_node = null;
-
-	// audiovideostream.stop();
-	// videoElement.srcObject = null;
 }
 
 //================= SOCKET IO =================
@@ -142,7 +123,6 @@ socket.on('speechData', function (data) {
     var dataFinal = speechEventType === 'END_OF_SINGLE_UTTERANCE';
     console.log('Received: ' + data.result.textTranslationResult.translation);
     if (dataFinal === false) {
-        // console.log(resultText.lastElementChild);
         if (removeLastSentence) { resultText.lastElementChild.remove(); }
         removeLastSentence = true;
 
@@ -159,24 +139,10 @@ socket.on('speechData', function (data) {
         }
 
     } else if (dataFinal === true) {
-        //resultText.lastElementChild.remove();
-        //
         //add empty span
         let empty = document.createElement('span');
         resultText.appendChild(empty);
         
-        ////add children to empty span
-        //let edit = addTimeSettingsFinal(data);
-        //for (var i = 0; i < edit.length; i++) {
-        //    if (i === 0) {
-        //        edit[i].innerText = capitalize(edit[i].innerText)
-        //    }
-        //    resultText.lastElementChild.appendChild(edit[i]);
-        //
-        //    if (i !== edit.length - 1) {
-        //        resultText.lastElementChild.appendChild(document.createTextNode('\u00A0'));
-        //    }
-        //}
         resultText.lastElementChild.appendChild(document.createTextNode('\u002E\u00A0'));
 
         console.log("Google Speech sent 'final' Sentence.");
@@ -219,7 +185,6 @@ function addTimeSettingsInterim(speechData) {
 		//add all classes
 		for (let j = 0; j < nlpObject[i].tags.length; j++) {
 			let cleanClassName = tags[j];
-			// console.log(tags);
 			let className = `nl-${cleanClassName}`;
 			newSpan.classList.add(className);
 		}
@@ -257,7 +222,6 @@ function addTimeSettingsFinal(speechData) {
 		//add all classes
 		for (let j = 0; j < nlpObject[i].tags.length; j++) {
 			let cleanClassName = tags[j];
-			// console.log(tags);
 			let className = `nl-${cleanClassName}`;
 			newSpan.classList.add(className);
 		}
